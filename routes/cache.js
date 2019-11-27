@@ -4,9 +4,12 @@
 const express = require('express');
 const router = express.Router();
 const jerr = require('../error');
+const bodyParser = require('body-parser');
+
+router.use(bodyParser.raw({type: '*/*'}));
 
 /* GET cache item */
-router.get('/:key', function(req, res, next) {
+router.get('/:key', function(req, res) {
   var memcached = req.app.locals.memcached;
   memcached.get(req.params.key, function(err, data) {
     if (err) {
@@ -19,6 +22,18 @@ router.get('/:key', function(req, res, next) {
 	'Content-Length': data.length,
       });
       res.end(data);
+    }
+  });
+});
+
+router.put('/:key', function(req, res) {
+  var memcached = req.app.locals.memcached;
+  console.log(req);
+  memcached.set(req.params.key, req.body, 0, function(err, data) {
+    if (err) {
+      res.status(500).json(jerr.InternalServer);
+    } else {
+      res.json({"result":true});
     }
   });
 });
