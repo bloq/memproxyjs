@@ -8,7 +8,7 @@ const bodyParser = require('body-parser');
 
 router.use(bodyParser.raw({type: '*/*'}));
 
-/* GET cache item */
+// GET cache item
 router.get('/:key', function(req, res) {
   var memcached = req.app.locals.memcached;
   memcached.get(req.params.key, function(err, data) {
@@ -26,6 +26,7 @@ router.get('/:key', function(req, res) {
   });
 });
 
+// PUT cache item
 router.put('/:key', function(req, res) {
   var memcached = req.app.locals.memcached;
   console.log(req);
