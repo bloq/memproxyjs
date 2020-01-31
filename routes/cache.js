@@ -14,9 +14,11 @@ router.get('/:key', function(req, res) {
   memcached.get(req.params.key, function(err, data) {
     if (err) {
       res.status(500).json(jerr.InternalServer);
-    } else if (!data) {
+    } else if (!data || !data.length) {
       res.status(404).json(jerr.NotFound);
     } else {
+      //console.log("RETURNING DATA:");
+      //console.log(data);
       res.writeHead(200, {
         'Content-Type': 'application/octet-stream',
 	'Content-Length': data.length,
