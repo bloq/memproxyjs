@@ -31,7 +31,7 @@ router.get('/:key', function(req, res) {
 // PUT cache item
 router.put('/:key', function(req, res) {
   var memcached = req.app.locals.memcached;
-  console.log(req);
+  // console.log(req);
   memcached.set(req.params.key, req.body, 0, function(err, data) {
     if (err) {
       res.status(500).json(jerr.InternalServer);
