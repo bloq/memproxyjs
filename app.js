@@ -1,3 +1,6 @@
+
+'use strict';
+
 const createError = require('http-errors');
 const express = require('express');
 const path = require('path');
@@ -9,7 +12,8 @@ const cacheRouter = require('./routes/cache');
 
 var app = express();
 
-app.locals.memcached = new Memcached('127.0.0.1:11211');
+const upstream = process.env.UPSTREAM || '127.0.0.1:11211';
+app.locals.memcached = new Memcached(upstream);
 
 app.use(logger('dev'));
 
