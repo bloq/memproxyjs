@@ -24,3 +24,28 @@ npm start
 
 which runs `bin/www`
 
+## Testing
+
+Before running end-to-end tests, start an instance of `memcached`:
+
+```sh
+npm run start:memcached
+```
+
+Then run the end-to-end test suite:
+
+```sh
+npm run test:e2e
+```
+
+Alternatively, run end-to-end coverage tests:
+
+```sh
+npm run coverage:e2e
+```
+
+Finally, shut down `memcached`:
+
+```sh
+docker-compose down
+```
