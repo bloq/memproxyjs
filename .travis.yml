@@ -1,0 +1,18 @@
+language: node_js
+
+node_js:
+  - '10'
+  - '8'
+
+services: docker
+
+cache: npm
+
+before_install:
+  - docker pull memcached:1.5.21
+
+script:
+  - npm ci
+  - npm run lint
+  - npm run test:e2e
+
