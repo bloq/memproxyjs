@@ -7,6 +7,19 @@ microservice wrapper for memcached
 $ npm i
 ```
 
+## API Summary
+
+### Cache I/O
+
+* **Get Item**: GET /cache
+* **Put Item**: PUT /cache
+
+The HTTP header `X-MC-Key` should be set to the Base64-encoded key.
+
+### Administration
+* **Identity**: GET /
+* **Cache stats and health check**: GET /stats
+
 ## Configuration
 
 Examines `PORT` environment variable for microservice listen port,

@@ -8,6 +8,7 @@ function define(name, value) {
     });
 }
 
+define('BadRequest', { "error": {"code":400,"message":"invalid request"} });
 define('NotFound', { "error": {"code":404,"message":"not found"} });
 define('InternalServer', { "error": {"code":500,"message":"internal server error"} });
 
