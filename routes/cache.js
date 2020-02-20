@@ -19,7 +19,7 @@ function decode_key(req)
 }
 
 // GET cache item
-router.get('/', function(req, res) {
+router.get('/item', function(req, res) {
   // decode key from http header
   const key = decode_key(req);
   if (!key) {
@@ -46,7 +46,7 @@ router.get('/', function(req, res) {
 });
 
 // PUT cache item
-router.put('/', function(req, res) {
+router.put('/item', function(req, res) {
   // decode key from http header
   const key = decode_key(req);
   if (!key) {

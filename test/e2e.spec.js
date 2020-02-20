@@ -55,7 +55,7 @@ describe('Memproxy end-to-end', function () {
 	headers: {
           'X-MC-Key': b64str(`testObject${i}`),
 	},
-        url: '/cache',
+        url: '/cache/item',
         method: 'PUT',
         body: testObject
       })
@@ -70,7 +70,7 @@ describe('Memproxy end-to-end', function () {
 	    headers: {
               'X-MC-Key': b64str(`testObject${i}`),
 	    },
-            url: '/cache',
+            url: '/cache/item',
 	  })
           .then(function (res) {
             res.should.deep.equal(testObjects[i])
@@ -85,7 +85,7 @@ describe('Memproxy end-to-end', function () {
 	headers: {
           'X-MC-Key': b64str('missingObject'),
 	},
-        url: '/cache',
+        url: '/cache/item',
     })
       .should.be.rejectedWith('404')
   })
@@ -93,7 +93,7 @@ describe('Memproxy end-to-end', function () {
   it('should return 400 for missing key-header', function () {
     return request({
         baseUrl,
-        url: '/cache',
+        url: '/cache/item',
     })
       .should.be.rejectedWith('400')
   })
