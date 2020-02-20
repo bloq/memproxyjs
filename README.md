@@ -11,8 +11,8 @@ $ npm i
 
 ### Cache I/O
 
-* **Get Item**: GET /cache
-* **Put Item**: PUT /cache
+* **Get Item**: GET /cache/item
+* **Put Item**: PUT /cache/item
 
 The HTTP header `X-MC-Key` should be set to the Base64-encoded key.
 
