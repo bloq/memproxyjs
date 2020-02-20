@@ -89,4 +89,12 @@ describe('Memproxy end-to-end', function () {
     })
       .should.be.rejectedWith('404')
   })
+
+  it('should return 400 for missing key-header', function () {
+    return request({
+        baseUrl,
+        url: '/cache',
+    })
+      .should.be.rejectedWith('400')
+  })
 })

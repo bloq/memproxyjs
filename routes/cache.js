@@ -23,7 +23,7 @@ router.get('/', function(req, res) {
   // decode key from http header
   const key = decode_key(req);
   if (!key) {
-      res.status(400).json(jerr.BadRequest);
+      return res.status(400).json(jerr.BadRequest);
   }
 
   // call memcached with key
