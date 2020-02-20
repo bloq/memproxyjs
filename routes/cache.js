@@ -5,13 +5,30 @@ const express = require('express');
 const router = express.Router();
 const jerr = require('../error');
 const bodyParser = require('body-parser');
+const validator = require('validator');
 
 router.use(bodyParser.raw({type: '*/*'}));
 
+function decode_key(req)
+{
+  const raw_hdr = req.header('X-MC-Key');
+  if (!raw_hdr || !validator.isBase64(raw_hdr))
+    return null;
+  const buf = Buffer.from(raw_hdr, 'base64');
+  return buf;
+}
+
 // GET cache item
-router.get('/:key', function(req, res) {
+router.get('/item', function(req, res) {
+  // decode key from http header
+  const key = decode_key(req);
+  if (!key) {
+      return res.status(400).json(jerr.BadRequest);
+  }
+
+  // call memcached with key
   var memcached = req.app.locals.memcached;
-  memcached.get(req.params.key, function(err, data) {
+  memcached.get(key, function(err, data) {
     if (err) {
       res.status(500).json(jerr.InternalServer);
     } else if (!data || !data.length) {
@@ -29,10 +46,15 @@ router.get('/:key', function(req, res) {
 });
 
 // PUT cache item
-router.put('/:key', function(req, res) {
+router.put('/item', function(req, res) {
+  // decode key from http header
+  const key = decode_key(req);
+  if (!key) {
+      res.status(400).json(jerr.BadRequest);
+  }
+
   var memcached = req.app.locals.memcached;
-  // console.log(req);
-  memcached.set(req.params.key, req.body, 0, function(err, data) {
+  memcached.set(key, req.body, 0, function(err, data) {
     if (err) {
       res.status(500).json(jerr.InternalServer);
     } else {

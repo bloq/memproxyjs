@@ -5,6 +5,12 @@ const chaiAsPromised = require('chai-as-promised')
 const randomstring = require('randomstring')
 const rp = require('request-promise-native')
 
+function b64str(s) {
+  const buf = Buffer.from(s);
+  const enc = buf.toString('base64');
+  return enc;
+}
+
 chai.use(chaiAsPromised).should()
 
 const request = rp.defaults({ json: true })
@@ -35,7 +41,7 @@ describe('Memproxy end-to-end', function () {
         res.should.be.an('array').that.have.lengthOf(1)
         res[0].should.be.an('object')
           .that.include.all.keys('server', 'pid' ,'version')
-      })  
+      })
   })
 
   it('should put and get some keys', function () {
@@ -45,9 +51,12 @@ describe('Memproxy end-to-end', function () {
 
     return Promise.all(testObjects.map((testObject, i) =>
       request({
-        baseUrl, 
-        url: `/cache/testObject${i}`, 
-        method: 'PUT', 
+        baseUrl,
+	headers: {
+          'X-MC-Key': b64str(`testObject${i}`),
+	},
+        url: '/cache/item',
+        method: 'PUT',
         body: testObject
       })
     ))
@@ -56,7 +65,13 @@ describe('Memproxy end-to-end', function () {
           res.should.deep.equal({ result: true })
         })
         return Promise.all(testObjects.map((testObject, i) =>
-          request({ baseUrl, url: `/cache/testObject${i}` })
+          request({
+	    baseUrl,
+	    headers: {
+              'X-MC-Key': b64str(`testObject${i}`),
+	    },
+            url: '/cache/item',
+	  })
           .then(function (res) {
             res.should.deep.equal(testObjects[i])
           })
@@ -65,7 +80,21 @@ describe('Memproxy end-to-end', function () {
   })
 
   it('should return 404 for missing keys', function () {
-    return request({ baseUrl, url: '/cache/missingObject' })
+    return request({
+        baseUrl,
+	headers: {
+          'X-MC-Key': b64str('missingObject'),
+	},
+        url: '/cache/item',
+    })
       .should.be.rejectedWith('404')
+  })
+
+  it('should return 400 for missing key-header', function () {
+    return request({
+        baseUrl,
+        url: '/cache/item',
+    })
+      .should.be.rejectedWith('400')
   })
 })
