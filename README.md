@@ -9,9 +9,7 @@ $ npm i
 
 ## API Summary
 
-### Cache I/O
-
-#### **Get Item**: GET /cache/item
+### **Get Item**: GET /cache/item
 
 Input headers:
 `X-MC-Key` should be set to the Base64-encoded key.
@@ -24,7 +22,7 @@ HTTP status codes:
 * 404, if not present or expired
 * 5xx, upon server error
 
-#### **Put Item**: PUT /cache/item
+### **Put Item**: PUT /cache/item
 
 Input headers:
 `X-MC-Key` should be set to the Base64-encoded key.
