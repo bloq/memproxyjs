@@ -18,6 +18,17 @@ function decode_key(req)
   return buf;
 }
 
+function decode_expiration(req)
+{
+  const raw_hdr = req.header('X-MC-Exp');
+  if (!raw_hdr || !validator.isInt(raw_hdr))
+    return null;
+  const exp = parseInt(raw_hdr);
+  if (exp < 0)
+    return null;
+  return exp;
+}
+
 // GET cache item
 router.get('/item', function(req, res) {
   // decode key from http header
@@ -53,8 +64,10 @@ router.put('/item', function(req, res) {
       res.status(400).json(jerr.BadRequest);
   }
 
+  const exp = decode_expiration(req) || 0;
+
   var memcached = req.app.locals.memcached;
-  memcached.set(key, req.body, 0, function(err, data) {
+  memcached.set(key, req.body, exp, function(err, data) {
     if (err) {
       res.status(500).json(jerr.InternalServer);
     } else {

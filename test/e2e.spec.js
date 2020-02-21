@@ -97,4 +97,35 @@ describe('Memproxy end-to-end', function () {
     })
       .should.be.rejectedWith('400')
   })
+
+  it('should return 404 for expired items', function () {
+    this.timeout(4000 * 2);
+    const testObject = 'testObjectExp';
+    return request({
+        baseUrl,
+	headers: {
+          'X-MC-Key': b64str(testObject),
+	  'X-MC-Exp': '3',
+	},
+        url: '/cache/item',
+        method: 'PUT',
+        body: testObject
+      })
+      .then(function(res) {
+          res.should.deep.equal({ result: true })
+	  return new Promise((resolve, reject) => {
+	    setTimeout(function() { resolve(); }, 4000);
+	  });
+      })
+      .then(function() {
+        return request({
+            baseUrl,
+	    headers: {
+              'X-MC-Key': b64str(testObject),
+	    },
+            url: '/cache/item',
+          })
+          .should.be.rejectedWith('404')
+      })
+  })
 })

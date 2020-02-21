@@ -11,10 +11,34 @@ $ npm i
 
 ### Cache I/O
 
-* **Get Item**: GET /cache/item
-* **Put Item**: PUT /cache/item
+#### **Get Item**: GET /cache/item
 
-The HTTP header `X-MC-Key` should be set to the Base64-encoded key.
+Input headers:
+`X-MC-Key` should be set to the Base64-encoded key.
+
+Output payload:
+application/octet-stream containing cache entry.
+
+HTTP status codes:
+* 200, upon success
+* 404, if not present or expired
+* 5xx, upon server error
+
+#### **Put Item**: PUT /cache/item
+
+Input headers:
+`X-MC-Key` should be set to the Base64-encoded key.
+`X-MC-Exp` specifies the lifetime of the cache entry, in seconds, after which 404-Not-Found will be returned.
+
+Input payload:
+application/octet-stream payload to be stored as the cached value.
+
+Output:
+application/json payload { "result": true } indicating success.
+
+HTTP status codes:
+* 200, upon success
+* 5xx, upon server error
 
 ### Administration
 * **Identity**: GET /
