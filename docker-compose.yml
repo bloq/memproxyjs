@@ -4,6 +4,7 @@ services:
   memcached:
     image: memcached:1.5.21
     container_name: memcached
+    command: memcached -vv
     ports:
       - 11211:11211
 
