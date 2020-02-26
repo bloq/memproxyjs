@@ -1,6 +1,6 @@
 {
   "name": "memcache-proxy",
-  "version": "0.0.3",
+  "version": "0.1.0",
   "private": true,
   "scripts": {
     "coverage:e2e": "nyc npm run test:e2e",
