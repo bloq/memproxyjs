@@ -3,6 +3,8 @@ MAINTAINER Jeff Garzik <jeff@bloq.com>
 
 # Create app directory
 WORKDIR /usr/src/app
+RUN chown node:node /usr/src/app
+USER node
 
 # Install app dependencies
 # A wildcard is used to ensure both package.json AND package-lock.json
