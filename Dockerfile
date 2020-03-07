@@ -1,4 +1,4 @@
-FROM node:10
+FROM node:10-alpine
 MAINTAINER Jeff Garzik <jeff@bloq.com>
 
 # Create app directory
