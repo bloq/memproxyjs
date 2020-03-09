@@ -1,8 +1,12 @@
-FROM node:10
+FROM node:10-alpine
 MAINTAINER Jeff Garzik <jeff@bloq.com>
+
+RUN apk add --no-cache curl
 
 # Create app directory
 WORKDIR /usr/src/app
+RUN chown node:node /usr/src/app
+USER node
 
 # Install app dependencies
 # A wildcard is used to ensure both package.json AND package-lock.json
@@ -17,4 +21,6 @@ RUN npm install
 COPY . .
 
 EXPOSE 3000
-CMD [ "node", "bin/www" ]
+CMD [ "npm", "start" ]
+
+HEALTHCHECK CMD curl --fail --silent http://localhost:3000
