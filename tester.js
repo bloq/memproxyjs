@@ -3,26 +3,26 @@
 const BASEURL = 'http://127.0.0.1:3000'
 const request = require('request')
 
-async function api_call(options) {
+async function apiCall(options) {
   return new Promise((resolve, reject) => {
     request(options, function(err, res, body) {
       if (err) reject(err)
-      else if (res.statusCode != 200) reject(body)
+      else if (res.statusCode !== 200) reject(body)
       else resolve(body)
     })
   })
 }
 
-async function api_get(key) {
+async function apiGet(key) {
   const options = {
     url: `${BASEURL}/cache/${key}`,
     method: 'GET'
   }
 
-  return api_call(options)
+  return apiCall(options)
 }
 
-async function api_put(key, data) {
+async function apiPut(key, data) {
   const options = {
     url: `${BASEURL}/cache/${key}`,
     method: 'PUT',
@@ -33,17 +33,17 @@ async function api_put(key, data) {
     }
   }
 
-  return api_call(options)
+  return apiCall(options)
 }
 
-async function test_getset() {
+async function testGetSet() {
   const testkey = 'testkey'
   const testval = 'testvalue'
 
-  await api_put(testkey, testval)
+  await apiPut(testkey, testval)
 
   try {
-    const rv = await api_get(testkey)
+    const rv = await apiGet(testkey)
     console.log('RETURNVAL:')
     console.log(rv)
   } catch (err) {
@@ -53,5 +53,5 @@ async function test_getset() {
 }
 
 ;(async () => {
-  await test_getset()
+  await testGetSet()
 })()

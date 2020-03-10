@@ -1,12 +1,13 @@
 'use strict'
 
 const pjson = require('../package.json')
+const jerr = require('../error')
 
 const express = require('express')
 const router = express.Router()
 
 // GET server identity
-router.get('/', function(req, res, next) {
+router.get('/', function(req, res) {
   res.json({
     name: pjson.name,
     version: pjson.version

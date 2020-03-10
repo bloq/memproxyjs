@@ -16,6 +16,7 @@ chai.use(chaiAsPromised).should()
 const request = rp.defaults({ json: true })
 
 describe('Memproxy end-to-end', function() {
+  // eslint-disable-next-line mocha/no-setup-in-describe
   const baseUrl = `http://localhost:${process.env.PORT || 3000}`
 
   before(function() {
@@ -112,7 +113,7 @@ describe('Memproxy end-to-end', function() {
     })
       .then(function(res) {
         res.should.deep.equal({ result: true })
-        return new Promise((resolve, reject) => {
+        return new Promise(resolve => {
           setTimeout(function() {
             resolve()
           }, 4000)
