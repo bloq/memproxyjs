@@ -46,8 +46,5 @@
     "nyc": "15.0.0",
     "randomstring": "1.1.5",
     "request-promise-native": "1.0.8"
-  },
-  "lint-staged": {
-    "*.js": "eslint --cache --fix"
   }
 }
