@@ -1,0 +1,19 @@
+{
+  "env": {
+    "browser": false
+  },
+  "extends": ["bloq", "bloq/node", "plugin:prettier/recommended"],
+  "overrides": [
+    {
+      "files": "test/*.spec.js",
+      "extends": ["bloq/mocha"]
+    }
+  ],
+  "root": true,
+  "rules": {
+    "jsdoc/require-jsdoc": "off",
+    "no-negated-condition": "off",
+    "node/no-unpublished-require": "off",
+    "curly": "error"
+  }
+}

@@ -12,4 +12,6 @@ services:
 
 before_script: npm run start:memcached
 
-script: npm run test:e2e
+script:
+  - npm run lint
+  - npm run test:e2e
