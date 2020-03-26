@@ -15,12 +15,14 @@ chai.use(chaiAsPromised).should()
 
 const request = rp.defaults({ json: true })
 
-describe('Memproxy end-to-end', function () {
-  // eslint-disable-next-line mocha/no-setup-in-describe
-  const baseUrl = `http://localhost:${process.env.PORT || 3000}`
+const { E2E, PORT = 3000, AUTH_USER, AUTH_PASS } = process.env
 
+const auth = AUTH_USER && AUTH_PASS ? `${AUTH_USER}:${AUTH_PASS}@` : ''
+const baseUrl = `http://${auth}localhost:${PORT || 3000}`
+
+describe('Memproxy end-to-end', function () {
   before(function () {
-    if (!process.env.E2E) {
+    if (!E2E) {
       this.skip()
     }
 

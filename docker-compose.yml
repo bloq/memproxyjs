@@ -11,6 +11,8 @@ services:
   memproxy:
     build: .
     environment:
+      - AUTH_USER=${AUTH_USER}
+      - AUTH_PASS=${AUTH_PASS}
       - DEBUG=memcache*
       - PORT=${PORT:-3000}
       - UPSTREAM=${UPSTREAM:-memcached:11211}
