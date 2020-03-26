@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "build": "docker build -t bloq/memproxyjs:${npm_package_version} .",
     "lint": "eslint .",
     "coverage:e2e": "nyc npm run test:e2e",
     "start": "node ./bin/www",
