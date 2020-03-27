@@ -2,7 +2,7 @@
   "env": {
     "browser": false
   },
-  "extends": ["bloq", "bloq/node", "plugin:prettier/recommended"],
+  "extends": ["bloq", "bloq/node"],
   "overrides": [
     {
       "files": "test/*.spec.js",

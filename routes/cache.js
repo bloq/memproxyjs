@@ -24,7 +24,7 @@ function decodeExpiration(req) {
 }
 
 // GET cache item
-router.get('/item', function(req, res) {
+router.get('/item', function (req, res) {
   // decode key from http header
   const key = decodeKey(req)
   if (!key) {
@@ -33,7 +33,7 @@ router.get('/item', function(req, res) {
 
   // call memcached with key
   const memcached = req.app.locals.memcached
-  memcached.get(key, function(err, data) {
+  memcached.get(key, function (err, data) {
     if (err) {
       res.status(500).json(jerr.InternalServer)
     } else if (!data || !data.length) {
@@ -43,7 +43,7 @@ router.get('/item', function(req, res) {
       // console.log(data);
       res.writeHead(200, {
         'Content-Type': 'application/octet-stream',
-        'Content-Length': data.length
+        'Content-Length': data.length,
       })
       res.end(data)
     }
@@ -52,7 +52,7 @@ router.get('/item', function(req, res) {
 })
 
 // PUT cache item
-router.put('/item', function(req, res) {
+router.put('/item', function (req, res) {
   // decode key from http header
   const key = decodeKey(req)
   if (!key) {
@@ -62,7 +62,7 @@ router.put('/item', function(req, res) {
   const exp = decodeExpiration(req) || 0
 
   const memcached = req.app.locals.memcached
-  memcached.set(key, req.body, exp, function(err) {
+  memcached.set(key, req.body, exp, function (err) {
     if (err) {
       res.status(500).json(jerr.InternalServer)
     } else {
