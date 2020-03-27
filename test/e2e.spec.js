@@ -15,11 +15,11 @@ chai.use(chaiAsPromised).should()
 
 const request = rp.defaults({ json: true })
 
-describe('Memproxy end-to-end', function() {
+describe('Memproxy end-to-end', function () {
   // eslint-disable-next-line mocha/no-setup-in-describe
   const baseUrl = `http://localhost:${process.env.PORT || 3000}`
 
-  before(function() {
+  before(function () {
     if (!process.env.E2E) {
       this.skip()
     }
@@ -28,15 +28,15 @@ describe('Memproxy end-to-end', function() {
     require('../bin/www')
   })
 
-  it('should retrieve server identity', function() {
-    return request({ baseUrl, url: '/' }).then(function(res) {
+  it('should retrieve server identity', function () {
+    return request({ baseUrl, url: '/' }).then(function (res) {
       res.should.have.property('name').that.is.a('string')
       res.should.have.property('version').that.is.a('string')
     })
   })
 
-  it('should retrieve server stats', function() {
-    return request({ baseUrl, url: '/stats' }).then(function(res) {
+  it('should retrieve server stats', function () {
+    return request({ baseUrl, url: '/stats' }).then(function (res) {
       res.should.be.an('array').that.have.lengthOf(1)
       res[0].should.be
         .an('object')
@@ -44,7 +44,7 @@ describe('Memproxy end-to-end', function() {
     })
   })
 
-  it('should put and get some keys', function() {
+  it('should put and get some keys', function () {
     const testObjects = new Array(3)
       .fill(null)
       .map(() => ({ key: randomstring.generate() }))
@@ -54,15 +54,15 @@ describe('Memproxy end-to-end', function() {
         request({
           baseUrl,
           headers: {
-            'X-MC-Key': b64str(`testObject${i}`)
+            'X-MC-Key': b64str(`testObject${i}`),
           },
           url: '/cache/item',
           method: 'PUT',
-          body: testObject
+          body: testObject,
         })
       )
-    ).then(function(responses) {
-      responses.forEach(function(res) {
+    ).then(function (responses) {
+      responses.forEach(function (res) {
         res.should.deep.equal({ result: true })
       })
       return Promise.all(
@@ -70,10 +70,10 @@ describe('Memproxy end-to-end', function() {
           request({
             baseUrl,
             headers: {
-              'X-MC-Key': b64str(`testObject${i}`)
+              'X-MC-Key': b64str(`testObject${i}`),
             },
-            url: '/cache/item'
-          }).then(function(res) {
+            url: '/cache/item',
+          }).then(function (res) {
             res.should.deep.equal(testObjects[i])
           })
         )
@@ -81,51 +81,51 @@ describe('Memproxy end-to-end', function() {
     })
   })
 
-  it('should return 404 for missing keys', function() {
+  it('should return 404 for missing keys', function () {
     return request({
       baseUrl,
       headers: {
-        'X-MC-Key': b64str('missingObject')
+        'X-MC-Key': b64str('missingObject'),
       },
-      url: '/cache/item'
+      url: '/cache/item',
     }).should.be.rejectedWith('404')
   })
 
-  it('should return 400 for missing key-header', function() {
+  it('should return 400 for missing key-header', function () {
     return request({
       baseUrl,
-      url: '/cache/item'
+      url: '/cache/item',
     }).should.be.rejectedWith('400')
   })
 
-  it('should return 404 for expired items', function() {
+  it('should return 404 for expired items', function () {
     this.timeout(4000 * 2)
     const testObject = 'testObjectExp'
     return request({
       baseUrl,
       headers: {
         'X-MC-Key': b64str(testObject),
-        'X-MC-Exp': '3'
+        'X-MC-Exp': '3',
       },
       url: '/cache/item',
       method: 'PUT',
-      body: testObject
+      body: testObject,
     })
-      .then(function(res) {
+      .then(function (res) {
         res.should.deep.equal({ result: true })
-        return new Promise(resolve => {
-          setTimeout(function() {
+        return new Promise(function (resolve) {
+          setTimeout(function () {
             resolve()
           }, 4000)
         })
       })
-      .then(function() {
+      .then(function () {
         return request({
           baseUrl,
           headers: {
-            'X-MC-Key': b64str(testObject)
+            'X-MC-Key': b64str(testObject),
           },
-          url: '/cache/item'
+          url: '/cache/item',
         }).should.be.rejectedWith('404')
       })
   })
