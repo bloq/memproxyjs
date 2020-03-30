@@ -1,10 +1,11 @@
 # memproxyjs
+
 microservice wrapper for memcached
 
 ## Installation
 
-```
-$ npm i
+```sh
+npm i
 ```
 
 ## API Summary
@@ -18,9 +19,10 @@ Output payload:
 application/octet-stream containing cache entry.
 
 HTTP status codes:
-* 200, upon success
-* 404, if not present or expired
-* 5xx, upon server error
+
+- 200, upon success
+- 404, if not present or expired
+- 5xx, upon server error
 
 ### **Put Item**: PUT /cache/item
 
@@ -32,15 +34,22 @@ Input payload:
 application/octet-stream payload to be stored as the cached value.
 
 Output:
-application/json payload { "result": true } indicating success.
+application/json payload `{ "result": true }` indicating success.
 
 HTTP status codes:
-* 200, upon success
-* 5xx, upon server error
+
+- 200, upon success
+- 5xx, upon server error
 
 ### Administration
-* **Identity**: GET /
-* **Cache stats and health check**: GET /stats
+
+- **Identity**: GET /
+- **Cache stats and health check**: GET /stats
+
+## Authentication
+
+The routes at `/cache` can be set to require basic authentication.
+See [Configuration](#configuration) below.
 
 ## Configuration
 
@@ -48,12 +57,14 @@ Examines `PORT` environment variable for microservice listen port,
 or uses the express app default: 3000.
 
 Examines `UPSTREAM` environment variable for upstream memcached
-server location.  Multiple upstream servers are not supported.
+server location. Multiple upstream servers are not supported.
 Default, if not supplied: 127.0.0.1:11211
+
+Examines `AUTH_USER` and `AUTH_PASSWORD` environment variables for enabling authentication on the cache routes when both are set.
 
 ## Running
 
-```
+```sh
 npm start
 ```
 
