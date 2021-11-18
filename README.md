@@ -24,6 +24,19 @@ HTTP status codes:
 - 404, if not present or expired
 - 5xx, upon server error
 
+### **Get Multiple Items**: POST /cache/getitems
+
+Input payload:
+application/json array of keys that need to be fetched
+
+Output payload:
+application/json object containing all the key values found with format `{ "key1": "value1", "key2": "value2" ...}`
+
+HTTP status codes:
+
+- 200, upon success
+- 5xx, upon server error
+
 ### **Put Item**: PUT /cache/item
 
 Input headers:
@@ -32,6 +45,19 @@ Input headers:
 
 Input payload:
 application/octet-stream payload to be stored as the cached value.
+
+Output:
+application/json payload `{ "result": true }` indicating success.
+
+HTTP status codes:
+
+- 200, upon success
+- 5xx, upon server error
+
+### **Put Multiple Items**: PUT /cache/items
+
+Input payload:
+application/json array of objects with format `{ "key": string, "value": string, "exp": number}`, each of them representing a value `value` that will be set with key `key` and expiration lifetime in seconds of `exp`.
 
 Output:
 application/json payload `{ "result": true }` indicating success.

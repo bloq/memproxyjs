@@ -1,12 +1,13 @@
 'use strict'
 
+const { promisify } = require('util')
 const express = require('express')
 const router = express.Router()
 const jerr = require('../error')
 const bodyParser = require('body-parser')
 const validator = require('validator')
 
-router.use(bodyParser.raw({ type: '*/*' }))
+router.use(bodyParser.raw({ type: '*/*', limit: '50mb' }))
 
 function decodeKey(req) {
   const rawHeader = req.header('X-MC-Key')
@@ -22,6 +23,7 @@ function decodeExpiration(req) {
   if (exp < 0) {return null}
   return exp
 }
+
 
 // GET cache item
 router.get('/item', function (req, res) {
@@ -39,8 +41,6 @@ router.get('/item', function (req, res) {
     } else if (!data || !data.length) {
       res.status(404).json(jerr.NotFound)
     } else {
-      // console.log("RETURNING DATA:");
-      // console.log(data);
       res.writeHead(200, {
         'Content-Type': 'application/octet-stream',
         'Content-Length': data.length,
@@ -49,6 +49,27 @@ router.get('/item', function (req, res) {
     }
   })
   return null
+})
+
+// GET multiple cache items
+router.post('/getitems', function (req, res) {
+  const keys = JSON.parse(req.body)
+  const memcached = req.app.locals.memcached
+  if(!Array.isArray(keys)) {
+    res.status(400).json(jerr.BadRequest)
+    return
+  }
+
+  memcached.getMulti(keys, function (err, data) {
+    if (err) {
+      res.status(500).json(jerr.InternalServer)
+    } else {
+      Object.keys(data).forEach(function(k) {
+        data[k] = data[k].toString()
+      })
+      res.json(data)
+    }
+  })
 })
 
 // PUT cache item
@@ -69,6 +90,28 @@ router.put('/item', function (req, res) {
       res.json({ result: true })
     }
   })
+})
+
+// PUT multiple cache items
+router.put('/items', function (req, res) {
+  const items = JSON.parse(req.body)
+  const memcached = req.app.locals.memcached
+  const setPromise = promisify(memcached.set).bind(memcached)
+
+  if(!Array.isArray(items)) {
+    return res.status(400).json(jerr.BadRequest)
+  }
+
+  return Promise.allSettled(
+      items.map(({key, value, exp = 0}) => setPromise(key, value, exp))
+    )
+    .then(results => {
+      if(results.find(r => r.status === 'rejected')) {
+        throw Error('Set promise rejected')
+      }
+      res.json({ result: true })
+    })
+    .catch(() => res.status(500).json(jerr.InternalServer))
 })
 
 module.exports = router

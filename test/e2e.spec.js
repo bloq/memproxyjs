@@ -131,4 +131,105 @@ describe('Memproxy end-to-end', function () {
         }).should.be.rejectedWith('404')
       })
   })
+
+  it('should multi set items', function () {
+    const testObjects = new Array(3).fill(null).map((_, i) => ({
+      key: `testSetMultiObject${i}`,
+      value: randomstring.generate(),
+      exp: 3,
+    }))
+
+    return request({
+      baseUrl,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      url: '/cache/items',
+      method: 'PUT',
+      body: testObjects,
+    }).then((response) => {
+      response.should.deep.equal({ result: true })
+      return Promise.all(
+        testObjects.map((_, i) =>
+          request({
+            baseUrl,
+            headers: {
+              'X-MC-Key': b64str(`testSetMultiObject${i}`),
+            },
+            url: '/cache/item',
+          }).then(function (res) {
+            res.should.deep.equal(testObjects[i].value)
+          })
+        )
+      )
+    })
+  })
+
+  it('should multi get items', function () {
+    const testObjects = new Array(3)
+      .fill(null)
+      .map(() => ({ key: randomstring.generate() }))
+
+    return Promise.all(
+      testObjects.map((testObject, i) =>
+        request({
+          baseUrl,
+          headers: {
+            'X-MC-Key': b64str(`testGetMultiObject${i}`),
+          },
+          url: '/cache/item',
+          method: 'PUT',
+          body: testObject,
+        })
+      )
+    ).then(() => {
+      return request({
+        baseUrl,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        method: 'POST',
+        url: '/cache/getitems',
+        body: testObjects.map((_, i) => `testGetMultiObject${i}`),
+      }).then((response) => {
+        const expectedResponse = {}
+        testObjects.forEach(
+          (obj, i) =>
+            (expectedResponse[`testGetMultiObject${i}`] = JSON.stringify(obj))
+        )
+        response.should.deep.equal(expectedResponse)
+      })
+    })
+  })
+
+  it('should multi set and multi get items', function () {
+    const testObjects = new Array(3).fill(null).map((_, i) => ({
+      key: `testSetGetMultiObject${i}`,
+      value: randomstring.generate()
+    }))
+
+    return request({
+      baseUrl,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      url: '/cache/items',
+      method: 'PUT',
+      body: testObjects,
+    }).then(() => {
+      return request({
+        baseUrl,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        method: 'POST',
+        url: '/cache/getitems',
+        body: testObjects.map((o) => o.key),
+      }).then((response) => {
+        const expectedResponse = {}
+        testObjects.forEach((o) => (expectedResponse[o.key] = o.value))
+        response.should.deep.equal(expectedResponse)
+      })
+    })
+  })
 })
