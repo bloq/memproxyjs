@@ -10,16 +10,16 @@ router.use(bodyParser.raw({ type: '*/*' }))
 
 function decodeKey(req) {
   const rawHeader = req.header('X-MC-Key')
-  if (!rawHeader || !validator.isBase64(rawHeader)) return null
+  if (!rawHeader || !validator.isBase64(rawHeader)) {return null}
   const buf = Buffer.from(rawHeader, 'base64')
   return buf
 }
 
 function decodeExpiration(req) {
   const rawHeader = req.header('X-MC-Exp')
-  if (!rawHeader || !validator.isInt(rawHeader)) return null
+  if (!rawHeader || !validator.isInt(rawHeader)) {return null}
   const exp = parseInt(rawHeader)
-  if (exp < 0) return null
+  if (exp < 0) {return null}
   return exp
 }
 

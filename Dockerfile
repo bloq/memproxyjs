@@ -1,4 +1,4 @@
-FROM node:10-alpine
+FROM node:14-alpine
 MAINTAINER Jeff Garzik <jeff@bloq.com>
 
 RUN apk add --no-cache curl
