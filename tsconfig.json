@@ -3,7 +3,7 @@
     "allowJs": true,
     "checkJs": true,
     "noEmit": true,
-    "target": "ES2018",
+    "target": "ES2020",
     "module": "CommonJS",
     "resolveJsonModule": true
   }

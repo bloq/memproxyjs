@@ -3,15 +3,13 @@
 const BASEURL = 'http://127.0.0.1:3000'
 const request = require('request')
 
-async function apiCall(options) {
-  return new Promise(function(resolve, reject) {
+const apiCall = async (options) => new Promise(function(resolve, reject) {
     request(options, function(err, res, body) {
-      if (err) reject(err)
-      else if (res.statusCode !== 200) reject(body)
-      else resolve(body)
+      if (err) {reject(err)}
+      else if (res.statusCode !== 200) {reject(body)}
+      else {resolve(body)}
     })
-  })
-}
+  });
 
 async function apiGet(key) {
   const options = {
@@ -52,6 +50,6 @@ async function testGetSet() {
   }
 }
 
-;(async function() {
+(async function() {
   await testGetSet()
 })()
