@@ -121,3 +121,19 @@ Finally, shut down `memcached`:
 ```sh
 docker-compose down
 ```
+
+## Deployment
+
+For deploying a new version:
+
+*  use [npm version](https://docs.npmjs.com/cli/v8/commands/npm-version) to update the version in a new branch. For example:
+```
+git checkout -b 0.3.0
+npm version minor
+```
+
+* push the changes and create a PR. 
+
+* Once the PR is merged, apply a tag to the repository corresponding to the new version. 
+
+After this, a new docker image will be built and pushed to [dockerhub](https://hub.docker.com/r/bloq/memproxyjs).

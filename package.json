@@ -1,6 +1,6 @@
 {
   "name": "memcache-proxy",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "private": true,
   "scripts": {
     "build": "docker build -t bloq/memproxyjs:${npm_package_version} .",
